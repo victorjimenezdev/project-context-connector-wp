@@ -1,0 +1,23 @@
+{
+    "name": "your-vendor/project-context-connector",
+    "description": "Expose a sanitized, read-only project snapshot via REST and WP-CLI for Slack/Teams, scripts, and CI.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {},
+    "require-dev": {
+        "phpstan/phpstan": "^1.11",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "squizlabs/php_codesniffer": "^3.10",
+        "wp-coding-standards/wpcs": "^3.0"
+    },
+    "scripts": {
+        "lint": "phpcs --standard=phpcs.xml",
+        "phpstan": "phpstan analyse includes",
+        "test": "phpunit"
+    },
+    "autoload": {
+        "psr-4": {
+            "PCC\\": "includes/"
+        }
+    }
+}

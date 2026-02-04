@@ -1,0 +1,16 @@
+# Composer
+/vendor/
+
+# Environment and secrets
+.env
+.env.local
+*.key
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+
+# Build / cache
+*.log
+.cache/
