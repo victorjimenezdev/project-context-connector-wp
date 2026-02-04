@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="PCC WPCS">
+  <description>WordPress Coding Standards for Project Context Connector.</description>
+  <file>project-context-connector.php</file>
+  <file>includes</file>
+  <rule ref="WordPress-Extra"/>
+  <rule ref="WordPress-Docs"/>
+  <rule ref="PSR12"/>
+  <config name="minimum_supported_wp_version" value="6.1"/>
+  <arg name="extensions" value="php"/>
+  <exclude-pattern>vendor/*</exclude-pattern>
+  <exclude-pattern>tests/*</exclude-pattern>
+</ruleset>

@@ -1,0 +1,7 @@
+parameters:
+  level: 5
+  paths:
+    - includes
+  checkMissingIterableValueType: false
+  ignoreErrors:
+    - '#Call to function rest_get_ip_address\(\) might not be defined#'
