@@ -75,6 +75,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 					setTimeout(function(){ btn.textContent = '<?php echo esc_js( __( 'Copy', 'project-context-connector' ) ); ?>'; }, 1500);
 				} catch (err) {}
 			});
+
+			// HTTP origin warning.
+			var originsField = document.getElementById('allowed_origins');
+			if (originsField) {
+				originsField.addEventListener('blur', function() {
+					var origins = this.value;
+					var warningEl = document.querySelector('.http-warning');
+					if (origins.toLowerCase().indexOf('http://') !== -1) {
+						if (!warningEl) {
+							var warning = document.createElement('p');
+							warning.className = 'http-warning';
+							warning.style.color = '#d63638';
+							warning.innerHTML = '<strong><?php echo esc_js( __( 'Warning', 'project-context-connector' ) ); ?>:</strong> <?php echo esc_js( __( 'HTTP origins are insecure. Use HTTPS in production.', 'project-context-connector' ) ); ?>';
+							this.parentNode.appendChild(warning);
+						}
+					} else {
+						if (warningEl) {
+							warningEl.remove();
+						}
+					}
+				});
+			}
 		})();
 	</script>
 	<style>

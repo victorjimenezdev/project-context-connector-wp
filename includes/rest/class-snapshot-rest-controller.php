@@ -9,6 +9,7 @@ namespace PCC\REST;
 
 use PCC\Services\CORS_Manager;
 use PCC\Services\Rate_Limiter;
+use PCC\Services\Signature_Validator;
 use PCC\Services\Snapshot_Builder;
 use WP_Error;
 use WP_REST_Controller;
@@ -60,16 +61,25 @@ class Snapshot_REST_Controller extends WP_REST_Controller {
 	private $cors;
 
 	/**
+	 * Services.
+	 *
+	 * @var Signature_Validator
+	 */
+	private $signature_validator;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Snapshot_Builder $snapshot Snapshot builder.
-	 * @param Rate_Limiter     $rate     Rate limiter.
-	 * @param CORS_Manager     $cors     CORS manager.
+	 * @param Snapshot_Builder    $snapshot            Snapshot builder.
+	 * @param Rate_Limiter        $rate                Rate limiter.
+	 * @param CORS_Manager        $cors                CORS manager.
+	 * @param Signature_Validator $signature_validator Signature validator.
 	 */
-	public function __construct( Snapshot_Builder $snapshot, Rate_Limiter $rate, CORS_Manager $cors ) {
-		$this->snapshot = $snapshot;
-		$this->rate     = $rate;
-		$this->cors     = $cors;
+	public function __construct( Snapshot_Builder $snapshot, Rate_Limiter $rate, CORS_Manager $cors, Signature_Validator $signature_validator ) {
+		$this->snapshot            = $snapshot;
+		$this->rate                = $rate;
+		$this->cors                = $cors;
+		$this->signature_validator = $signature_validator;
 	}
 
 	/**
@@ -145,28 +155,14 @@ class Snapshot_REST_Controller extends WP_REST_Controller {
 
 		$key_id    = (string) $request->get_header( 'x-pcc-key' );
 		$timestamp = (string) $request->get_header( 'x-pcc-timestamp' );
-		$signature = strtolower( (string) $request->get_header( 'x-pcc-signature' ) );
-
-		if ( '' === $key_id || '' === $timestamp || '' === $signature ) {
-			return new WP_Error( 'pcc_bad_signature', __( 'Missing HMAC headers.', 'project-context-connector' ), array( 'status' => 401 ) );
-		}
-
-		if ( abs( time() - (int) $timestamp ) > 300 ) {
-			return new WP_Error( 'pcc_bad_signature', __( 'Timestamp outside acceptable window.', 'project-context-connector' ), array( 'status' => 401 ) );
-		}
-
-		$secret = $this->lookup_hmac_secret( $key_id );
-		if ( '' === $secret ) {
-			return new WP_Error( 'pcc_bad_signature', __( 'Unknown key id.', 'project-context-connector' ), array( 'status' => 401 ) );
-		}
+		$signature = (string) $request->get_header( 'x-pcc-signature' );
 
 		$method = strtoupper( $request->get_method() );
 		$path   = '/wp-json' . untrailingslashit( $request->get_route() );
-		$data   = $method . "\n" . $path . "\n" . $timestamp;
 
-		$expected = hash_hmac( 'sha256', $data, $secret );
-		if ( ! hash_equals( $expected, $signature ) ) {
-			return new WP_Error( 'pcc_bad_signature', __( 'Invalid HMAC signature.', 'project-context-connector' ), array( 'status' => 401 ) );
+		// Use centralized signature validator with enhanced security checks.
+		if ( ! $this->signature_validator->is_valid( $key_id, $timestamp, $signature, $method, $path ) ) {
+			return new WP_Error( 'pcc_bad_signature', __( 'Invalid or missing HMAC signature.', 'project-context-connector' ), array( 'status' => 401 ) );
 		}
 
 		// Signature OK: return snapshot.
@@ -186,47 +182,6 @@ class Snapshot_REST_Controller extends WP_REST_Controller {
 		$ttl = (int) ( get_option( 'pcc_options', array() )['cache_ttl'] ?? 300 );
 		$resp->header( 'Cache-Control', 'public, max-age=' . max( 0, $ttl ) );
 		return $resp;
-	}
-
-	/**
-	 * Resolve HMAC secret for a key id from wp-config.php.
-	 *
-	 * Supported:
-	 * - define('PCC_HMAC_KEYS_JSON', '{"key1":"secret1","key2":"secret2"}');
-	 * - define('PCC_HMAC_KEYS', '{"key1":"secret1"}');
-	 * - define('PCC_HMAC_KEY_mykey', 'secretvalue');
-	 *
-	 * @param string $key_id Key ID.
-	 * @return string Secret or empty string.
-	 */
-	private function lookup_hmac_secret( $key_id ) {
-		$map = array();
-
-		if ( defined( 'PCC_HMAC_KEYS_JSON' ) ) {
-			$j = json_decode( (string) constant( 'PCC_HMAC_KEYS_JSON' ), true );
-			if ( is_array( $j ) ) {
-				$map = array_merge( $map, $j );
-			}
-		}
-		if ( defined( 'PCC_HMAC_KEYS' ) ) {
-			$j = json_decode( (string) constant( 'PCC_HMAC_KEYS' ), true );
-			if ( is_array( $j ) ) {
-				$map = array_merge( $map, $j );
-			}
-		}
-
-		// Individual constants PCC_HMAC_KEY_<ID>.
-		$consts = get_defined_constants( true );
-		if ( isset( $consts['user'] ) && is_array( $consts['user'] ) ) {
-			foreach ( $consts['user'] as $name => $value ) {
-				if ( 0 === strpos( $name, 'PCC_HMAC_KEY_' ) ) {
-					$id           = substr( $name, strlen( 'PCC_HMAC_KEY_' ) );
-					$map[ $id ] = (string) $value;
-				}
-			}
-		}
-
-		return isset( $map[ $key_id ] ) ? (string) $map[ $key_id ] : '';
 	}
 
 	/**

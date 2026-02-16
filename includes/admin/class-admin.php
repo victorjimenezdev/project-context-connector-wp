@@ -78,16 +78,17 @@ class Admin {
 				'type'              => 'array',
 				'sanitize_callback' => array( $this, 'sanitize' ),
 				'default'           => array(
-					'cors_enabled'         => false,
-					'allowed_origins'      => array(),
-					'rate_limit_threshold' => 60,
-					'rate_limit_window'    => 60,
-					'cache_ttl'            => 300,
-					'expose_updates'       => false,
-					'allow_caps'           => array(),
-					'allow_user_ids'       => array(),
-					'allow_ips'            => array(),
-					'allow_bearer'         => false,
+					'cors_enabled'            => false,
+					'allowed_origins'         => array(),
+					'rate_limit_threshold'    => 60,
+					'rate_limit_window'       => 60,
+					'cache_ttl'               => 300,
+					'expose_updates'          => false,
+					'expose_database_version' => true,
+					'allow_caps'              => array(),
+					'allow_user_ids'          => array(),
+					'allow_ips'               => array(),
+					'allow_bearer'            => false,
 				),
 			)
 		);
@@ -104,6 +105,7 @@ class Admin {
 		add_settings_field( 'rate_limit_window', __( 'Rate limit window (seconds)', 'project-context-connector' ), array( $this, 'field_number' ), 'pcc_settings', 'pcc_general', array( 'key' => 'rate_limit_window', 'min' => 1 ) );
 		add_settings_field( 'cache_ttl', __( 'Cache max age (seconds)', 'project-context-connector' ), array( $this, 'field_number' ), 'pcc_settings', 'pcc_general', array( 'key' => 'cache_ttl', 'min' => 0 ) );
 		add_settings_field( 'expose_updates', __( 'Expose update metadata', 'project-context-connector' ), array( $this, 'field_checkbox' ), 'pcc_settings', 'pcc_general', array( 'key' => 'expose_updates' ) );
+		add_settings_field( 'expose_database_version', __( 'Expose database version', 'project-context-connector' ), array( $this, 'field_checkbox_with_description' ), 'pcc_settings', 'pcc_general', array( 'key' => 'expose_database_version', 'description' => __( 'Include database driver and version. Disable for minimal information disclosure.', 'project-context-connector' ) ) );
 
 		add_settings_section(
 			'pcc_access',
@@ -142,10 +144,11 @@ class Admin {
 		}
 		$out['allowed_origins'] = array_values( array_unique( $origins ) );
 
-		$out['rate_limit_threshold'] = max( 1, (int) ( $input['rate_limit_threshold'] ?? 60 ) );
-		$out['rate_limit_window']    = max( 1, (int) ( $input['rate_limit_window'] ?? 60 ) );
-		$out['cache_ttl']            = max( 0, (int) ( $input['cache_ttl'] ?? 300 ) );
-		$out['expose_updates']       = ! empty( $input['expose_updates'] );
+		$out['rate_limit_threshold']    = max( 1, (int) ( $input['rate_limit_threshold'] ?? 60 ) );
+		$out['rate_limit_window']       = max( 1, (int) ( $input['rate_limit_window'] ?? 60 ) );
+		$out['cache_ttl']               = max( 0, (int) ( $input['cache_ttl'] ?? 300 ) );
+		$out['expose_updates']          = ! empty( $input['expose_updates'] );
+		$out['expose_database_version'] = ! empty( $input['expose_database_version'] );
 
 		// Allow capabilities.
 		$caps = array();
@@ -287,6 +290,27 @@ class Admin {
 		<textarea rows="5" cols="60" id="<?php echo esc_attr( $key ); ?>"
 			name="<?php echo esc_attr( self::OPTION . '[' . $key . ']' ); ?>"
 			placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo esc_textarea( (string) $value ); ?></textarea>
+		<?php
+	}
+
+	/**
+	 * Checkbox field with description.
+	 *
+	 * @param array $args Args with 'key' and 'description'.
+	 */
+	public function field_checkbox_with_description( $args ) {
+		$key         = $args['key'];
+		$description = isset( $args['description'] ) ? (string) $args['description'] : '';
+		$options     = get_option( self::OPTION, array() );
+		$checked     = ! empty( $options[ $key ] );
+		?>
+		<label>
+			<input type="checkbox" name="<?php echo esc_attr( self::OPTION . '[' . $key . ']' ); ?>" value="1" <?php checked( $checked ); ?> />
+			<?php echo esc_html( ucwords( str_replace( '_', ' ', (string) $key ) ) ); ?>
+		</label>
+		<?php if ( $description ) : ?>
+			<p class="description"><?php echo esc_html( $description ); ?></p>
+		<?php endif; ?>
 		<?php
 	}
 }

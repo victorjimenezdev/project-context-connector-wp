@@ -60,8 +60,16 @@ class Snapshot_Builder {
 		$locale   = get_locale();
 
 		$core_version = get_bloginfo( 'version' );
-		$db_server    = isset( $wpdb->db_server_info ) ? (string) $wpdb->db_server_info : '';
-		$db_version   = method_exists( $wpdb, 'db_version' ) ? (string) $wpdb->db_version() : '';
+
+		$options           = get_option( 'pcc_options', array() );
+		$expose_db_version = ! empty( $options['expose_database_version'] );
+
+		$db_server  = '';
+		$db_version = '';
+		if ( $expose_db_version ) {
+			$db_server  = isset( $wpdb->db_server_info ) ? (string) $wpdb->db_server_info : '';
+			$db_version = method_exists( $wpdb, 'db_version' ) ? (string) $wpdb->db_version() : '';
+		}
 
 		$theme     = wp_get_theme();
 		$parent    = $theme->parent();
