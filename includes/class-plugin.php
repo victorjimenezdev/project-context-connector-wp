@@ -13,6 +13,7 @@ use PCC\REST\Snapshot_REST_Controller;
 use PCC\Services\Cache_Manager;
 use PCC\Services\CORS_Manager;
 use PCC\Services\Rate_Limiter;
+use PCC\Services\Signature_Validator;
 use PCC\Services\Snapshot_Builder;
 use PCC\Services\Update_Metadata;
 
@@ -68,6 +69,13 @@ final class Plugin {
 	public $cors;
 
 	/**
+	 * Services.
+	 *
+	 * @var Signature_Validator
+	 */
+	public $signature_validator;
+
+	/**
 	 * Get singleton instance.
 	 *
 	 * @return Plugin
@@ -85,11 +93,12 @@ final class Plugin {
 	 * @return void
 	 */
 	public function init() {
-		$this->cache        = new Cache_Manager();
-		$this->rate_limiter = new Rate_Limiter();
-		$this->updates      = new Update_Metadata();
-		$this->snapshot     = new Snapshot_Builder( $this->updates, $this->cache );
-		$this->cors         = new CORS_Manager();
+		$this->cache               = new Cache_Manager();
+		$this->rate_limiter        = new Rate_Limiter();
+		$this->updates             = new Update_Metadata();
+		$this->snapshot            = new Snapshot_Builder( $this->updates, $this->cache );
+		$this->cors                = new CORS_Manager();
+		$this->signature_validator = new Signature_Validator();
 
 		// Admin UI.
 		if ( is_admin() ) {
@@ -100,7 +109,7 @@ final class Plugin {
 		add_action(
 			'rest_api_init',
 			function () {
-				( new Snapshot_REST_Controller( $this->snapshot, $this->rate_limiter, $this->cors ) )->register_routes();
+				( new Snapshot_REST_Controller( $this->snapshot, $this->rate_limiter, $this->cors, $this->signature_validator ) )->register_routes();
 			}
 		);
 

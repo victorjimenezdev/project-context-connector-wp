@@ -56,7 +56,7 @@ class CORS_Manager {
 		}
 
 		$origin = isset( $_SERVER['HTTP_ORIGIN'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_ORIGIN'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( $origin && in_array( $origin, $allowed_origins, true ) ) {
+		if ( $origin && $this->matches_allowed_origin( $origin, $allowed_origins ) ) {
 			header( 'Access-Control-Allow-Origin: ' . $origin );
 			header( 'Vary: Origin' );
 			header( 'Access-Control-Allow-Methods: GET, OPTIONS' );
@@ -72,6 +72,74 @@ class CORS_Manager {
 		}
 
 		return $served;
+	}
+
+	/**
+	 * Check if origin matches any allowed pattern.
+	 *
+	 * Supports exact matches and wildcard subdomain patterns like "https://*.example.com".
+	 * Wildcard patterns match ONLY subdomains, not the base domain itself.
+	 *
+	 * @param string $origin          Origin to check.
+	 * @param array  $allowed_origins Array of allowed origin patterns.
+	 * @return bool True if origin is allowed.
+	 */
+	private function matches_allowed_origin( $origin, $allowed_origins ) {
+		foreach ( $allowed_origins as $pattern ) {
+			if ( $this->matches_origin( $origin, $pattern ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if origin matches a pattern (exact or wildcard).
+	 *
+	 * @param string $origin  Origin (e.g., "https://sub.example.com").
+	 * @param string $pattern Pattern (e.g., "https://example.com" or "https://*.example.com").
+	 * @return bool True if matches.
+	 */
+	private function matches_origin( $origin, $pattern ) {
+		$normalized_origin  = rtrim( $origin, '/' );
+		$normalized_pattern = rtrim( $pattern, '/' );
+
+		// Exact match including scheme and host.
+		if ( 0 === strcasecmp( $normalized_origin, $normalized_pattern ) ) {
+			return true;
+		}
+
+		// Wildcard subdomain: "*.example.com" or "https://*.example.com".
+		if ( 0 === strpos( $normalized_pattern, '*.' ) ||
+		     0 === strpos( $normalized_pattern, 'https://*.' ) ||
+		     0 === strpos( $normalized_pattern, 'http://*.' ) ) {
+
+			// Extract scheme and host from origin.
+			$origin_scheme = wp_parse_url( $normalized_origin, PHP_URL_SCHEME );
+			$origin_host   = wp_parse_url( $normalized_origin, PHP_URL_HOST );
+
+			// Extract scheme and host from pattern.
+			$pattern_scheme = wp_parse_url( $normalized_pattern, PHP_URL_SCHEME );
+			if ( null === $pattern_scheme && 0 === strpos( $normalized_pattern, '*.' ) ) {
+				$pattern_scheme = 'https'; // Default to https.
+			}
+
+			$pattern_host = preg_replace( '/^\w+:\/\//', '', $normalized_pattern );
+			$pattern_host = ltrim( $pattern_host, '*.' );
+
+			// Ensure schemes match (security: don't allow http pattern to match https origin).
+			if ( $origin_scheme !== $pattern_scheme ) {
+				return false;
+			}
+
+			// Wildcard should match ONLY subdomains, not base domain.
+			// For "*.example.com" to match "example.com", add both patterns explicitly.
+			return $origin_host !== '' &&
+			       $origin_host !== $pattern_host &&
+			       0 === substr_compare( strtolower( $origin_host ), '.' . strtolower( $pattern_host ), - strlen( '.' . $pattern_host ) );
+		}
+
+		return false;
 	}
 
 	/**

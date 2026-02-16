@@ -2,9 +2,9 @@
 Contributors: your-wporg-username
 Tags: rest api, cli, devops, telemetry-free, slack
 Requires at least: 6.1
-Tested up to: 6.6
-Requires PHP: 7.4
-Stable tag: 1.0.0
+Tested up to: 6.7
+Requires PHP: 8.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,20 @@ No. It only returns technical metadata. No secrets are read from the DB; HMAC se
 
 Yes. It reports network‑active plugins and the `MULTISITE` flag.
 
+= What changed with CORS wildcards in 1.1.0? =
+
+CORS wildcard patterns like `https://*.example.com` now match **ONLY subdomains**, not the base domain. If you need both `example.com` and `sub.example.com`, add both patterns explicitly:
+
+https://example.com
+https://*.example.com
+
+
+This improves security by preventing unintended base domain matching.
+
+= Can I hide database version information? =
+
+Yes. In **Settings → Project Context Connector**, uncheck "Expose database version" to exclude database driver and version from the snapshot. This minimizes information disclosure.
+
 == Screenshots ==
 
 1. Settings page (CORS, rate limiting, caching, and update metadata).
@@ -95,10 +109,24 @@ Yes. It reports network‑active plugins and the `MULTISITE` flag.
 
 == Changelog ==
 
+= 1.1.0 =
+* Security: Added centralized Signature_Validator service with enhanced timestamp validation
+* Security: Improved CORS wildcard validation with scheme enforcement
+* Security: Enhanced timestamp validation (rejects leading zeros and out-of-range values)
+* Security: Added rate limiting for OPTIONS requests to prevent CORS probing
+* Feature: Added configurable database version exposure setting
+* Feature: Added HTTP origin warning in settings page
+* Breaking Change: CORS wildcard patterns (*.example.com) now match ONLY subdomains, not base domain
+* Improved: Refactored HMAC validation into dedicated service (removed 30+ lines of duplicate code)
+* Improved: Better code separation and testability
+
 = 1.0.0 =
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Security improvements and parity with Drupal module. BREAKING: CORS wildcard behavior changed - `*.example.com` now matches ONLY subdomains. Add both `https://example.com` and `https://*.example.com` if you need both.
 
 = 1.0.0 =
 Initial release with REST, HMAC route, caching, rate limiting, and WP‑CLI.
