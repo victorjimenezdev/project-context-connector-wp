@@ -1,8 +1,8 @@
 === Project Context Connector ===
-Contributors: your-wporg-username
+Contributors: victorjimenezdev
 Tags: rest api, cli, devops, telemetry-free, slack
 Requires at least: 6.1
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 8.0
 Stable tag: 1.1.0
 License: GPLv2 or later
