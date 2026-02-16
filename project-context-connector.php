@@ -35,7 +35,6 @@ use PCC\Plugin;
 add_action(
 	'plugins_loaded',
 	static function () {
-		load_plugin_textdomain( 'project-context-connector', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 		Plugin::instance()->init();
 	}
 );
@@ -67,14 +66,12 @@ add_action(
 	'admin_init',
 	static function () {
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
+			$policy_text  = '<p>';
+			$policy_text .= esc_html__( 'This plugin exposes a read-only technical snapshot of the site via REST API and WP-CLI. It does not collect personal data or send information to remote services. If you enable optional features like CORS allow-lists or HMAC keys, note that no secrets are stored in the database.', 'project-context-connector' );
+			$policy_text .= '</p>';
 			wp_add_privacy_policy_content(
 				__( 'Project Context Connector', 'project-context-connector' ),
-				wp_kses_post(
-					__(
-						'<p>This plugin exposes a read-only technical snapshot of the site via REST API and WP-CLI. It does not collect personal data or send information to remote services. If you enable optional features like CORS allow-lists or HMAC keys, note that no secrets are stored in the database.</p>',
-						'project-context-connector'
-					)
-				)
+				wp_kses_post( $policy_text )
 			);
 		}
 	}

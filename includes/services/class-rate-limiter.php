@@ -95,7 +95,7 @@ class Rate_Limiter {
 		if ( function_exists( 'rest_get_ip_address' ) ) {
 			$ip = (string) rest_get_ip_address();
 		} else {
-			$ip = (string) ( $_SERVER['REMOTE_ADDR'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 		}
 
 		$user_id  = get_current_user_id();

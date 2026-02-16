@@ -236,7 +236,7 @@ class Snapshot_REST_Controller extends WP_REST_Controller {
 	 * @return WP_Error|null
 	 */
 	private function ensure_ip_allowed( WP_REST_Request $request ) {
-		$ip = function_exists( 'rest_get_ip_address' ) ? rest_get_ip_address() : ( $_SERVER['REMOTE_ADDR'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$ip = function_exists( 'rest_get_ip_address' ) ? rest_get_ip_address() : ( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' );
 		if ( $this->cors->is_ip_allowed( (string) $ip ) ) {
 			return null;
 		}
