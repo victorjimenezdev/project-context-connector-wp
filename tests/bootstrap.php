@@ -20,7 +20,7 @@ require $_tests_dir . '/includes/functions.php';
 tests_add_filter(
 	'muplugins_loaded',
 	function () {
-		require dirname( __DIR__ ) . '/project-context-connector.php';
+		require dirname( __DIR__ ) . '/site-contextsnap.php';
 	}
 );
 

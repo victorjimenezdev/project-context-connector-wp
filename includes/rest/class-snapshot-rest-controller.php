@@ -2,7 +2,7 @@
 /**
  * REST Controller for /pcc/v1/snapshot and /pcc/v1/snapshot/signed.
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC\REST;
@@ -162,7 +162,7 @@ class Snapshot_REST_Controller extends WP_REST_Controller {
 
 		// Use centralized signature validator with enhanced security checks.
 		if ( ! $this->signature_validator->is_valid( $key_id, $timestamp, $signature, $method, $path ) ) {
-			return new WP_Error( 'pcc_bad_signature', __( 'Invalid or missing HMAC signature.', 'project-context-connector' ), array( 'status' => 401 ) );
+			return new WP_Error( 'pcc_bad_signature', __( 'Invalid or missing HMAC signature.', 'site-contextsnap' ), array( 'status' => 401 ) );
 		}
 
 		// Signature OK: return snapshot.
@@ -240,7 +240,7 @@ class Snapshot_REST_Controller extends WP_REST_Controller {
 		if ( $this->cors->is_ip_allowed( (string) $ip ) ) {
 			return null;
 		}
-		return new WP_Error( 'pcc_forbidden_ip', __( 'Access denied for this IP address.', 'project-context-connector' ), array( 'status' => 403 ) );
+		return new WP_Error( 'pcc_forbidden_ip', __( 'Access denied for this IP address.', 'site-contextsnap' ), array( 'status' => 403 ) );
 	}
 
 	/**
@@ -258,12 +258,12 @@ class Snapshot_REST_Controller extends WP_REST_Controller {
 		$options = get_option( 'pcc_options', array() );
 		$auth    = (string) $request->get_header( 'authorization' );
 		if ( $auth && 0 === stripos( $auth, 'Bearer ' ) && empty( $options['allow_bearer'] ) ) {
-			return new WP_Error( 'pcc_bearer_disabled', __( 'Bearer authentication is disabled for this endpoint.', 'project-context-connector' ), array( 'status' => 401 ) );
+			return new WP_Error( 'pcc_bearer_disabled', __( 'Bearer authentication is disabled for this endpoint.', 'site-contextsnap' ), array( 'status' => 401 ) );
 		}
 
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {
-			return new WP_Error( 'pcc_unauthorized', __( 'Authentication required.', 'project-context-connector' ), array( 'status' => 401 ) );
+			return new WP_Error( 'pcc_unauthorized', __( 'Authentication required.', 'site-contextsnap' ), array( 'status' => 401 ) );
 		}
 
 		if ( current_user_can( 'pcc_read_snapshot' ) ) {
@@ -282,7 +282,7 @@ class Snapshot_REST_Controller extends WP_REST_Controller {
 			}
 		}
 
-		return new WP_Error( 'pcc_forbidden', __( 'You do not have permission to view the project snapshot.', 'project-context-connector' ), array( 'status' => 403 ) );
+		return new WP_Error( 'pcc_forbidden', __( 'You do not have permission to view the project snapshot.', 'site-contextsnap' ), array( 'status' => 403 ) );
 	}
 
 }

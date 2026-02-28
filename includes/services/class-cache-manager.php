@@ -2,7 +2,7 @@
 /**
  * Snapshot cache manager (transients/object cache).
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC\Services;

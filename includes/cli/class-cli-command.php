@@ -2,7 +2,7 @@
 /**
  * WP-CLI command: wp pcc snapshot
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC\CLI;

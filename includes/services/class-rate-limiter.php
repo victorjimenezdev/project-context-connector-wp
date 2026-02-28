@@ -2,7 +2,7 @@
 /**
  * Per-origin/IP rate limiter (sliding window approximation).
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC\Services;

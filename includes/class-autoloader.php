@@ -2,7 +2,7 @@
 /**
  * Autoloader for PCC\ classes.
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC;

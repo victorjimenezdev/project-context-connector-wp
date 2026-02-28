@@ -2,7 +2,7 @@
 /**
  * CORS header management for our namespace.
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC\Services;

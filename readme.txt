@@ -1,4 +1,4 @@
-=== Project Context Connector ===
+=== Site Contextsnap ===
 Contributors: victorjimenezdev
 Tags: rest api, cli, devops, telemetry-free, slack
 Requires at least: 6.1
@@ -12,7 +12,7 @@ Expose a sanitized, read-only project snapshot via REST and WP-CLI for Slack/Tea
 
 == Description ==
 
-Project Context Connector emits a **high-signal, stable JSON** snapshot of your WordPress project for use in:
+Site Contextsnap emits a **high-signal, stable JSON** snapshot of your WordPress project for use in:
 - Chat workflows (Slack/Teams prompt building)
 - CI pipelines and local scripts
 - Support and incident response automation
@@ -49,7 +49,7 @@ Project Context Connector emits a **high-signal, stable JSON** snapshot of your 
 == Installation ==
 
 1. Upload the plugin and activate it.
-2. Go to **Settings → Project Context Connector**:
+2. Go to **Settings → Site Contextsnap**:
    - Enable CORS and list allowed origins (optional)
    - Set rate limit threshold/window and cache TTL
    - Toggle update metadata inclusion (optional)
@@ -100,7 +100,7 @@ This improves security by preventing unintended base domain matching.
 
 = Can I hide database version information? =
 
-Yes. In **Settings → Project Context Connector**, uncheck "Expose database version" to exclude database driver and version from the snapshot. This minimizes information disclosure.
+Yes. In **Settings → Site Contextsnap**, uncheck "Expose database version" to exclude database driver and version from the snapshot. This minimizes information disclosure.
 
 == Screenshots ==
 

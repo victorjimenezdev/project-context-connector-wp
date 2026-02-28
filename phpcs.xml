@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ruleset name="PCC WPCS">
-  <description>WordPress Coding Standards for Project Context Connector.</description>
-  <file>project-context-connector.php</file>
+  <description>WordPress Coding Standards for Site Contextsnap.</description>
+  <file>site-contextsnap.php</file>
   <file>includes</file>
   <rule ref="WordPress-Extra"/>
   <rule ref="WordPress-Docs"/>

@@ -2,7 +2,7 @@
 /**
  * Build the high-signal, stable snapshot.
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC\Services;

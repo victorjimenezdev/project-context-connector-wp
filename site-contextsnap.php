@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Project Context Connector
+ * Plugin Name:       Site Contextsnap
  * Description:       Expose a sanitized, read-only project snapshot via REST and WP-CLI for Slack/Teams prompts, scripts, and CI.
  * Version:           1.1.0
  * Requires at least: 6.1
@@ -9,10 +9,10 @@
  * Stable tag:        1.1.0
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       project-context-connector
+ * Text Domain:       site-contextsnap
  * Domain Path:       /languages
  *
- * @package           ProjectContextConnector
+ * @package           SiteContextsnap
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -67,10 +67,10 @@ add_action(
 	static function () {
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
 			$policy_text  = '<p>';
-			$policy_text .= esc_html__( 'This plugin exposes a read-only technical snapshot of the site via REST API and WP-CLI. It does not collect personal data or send information to remote services. If you enable optional features like CORS allow-lists or HMAC keys, note that no secrets are stored in the database.', 'project-context-connector' );
+			$policy_text .= esc_html__( 'This plugin exposes a read-only technical snapshot of the site via REST API and WP-CLI. It does not collect personal data or send information to remote services. If you enable optional features like CORS allow-lists or HMAC keys, note that no secrets are stored in the database.', 'site-contextsnap' );
 			$policy_text .= '</p>';
 			wp_add_privacy_policy_content(
-				__( 'Project Context Connector', 'project-context-connector' ),
+				__( 'Site Contextsnap', 'site-contextsnap' ),
 				wp_kses_post( $policy_text )
 			);
 		}

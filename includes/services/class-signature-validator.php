@@ -2,7 +2,7 @@
 /**
  * HMAC Signature Validator.
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC\Services;

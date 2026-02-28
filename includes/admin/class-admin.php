@@ -1,8 +1,8 @@
 <?php
 /**
- * Admin settings for Project Context Connector.
+ * Admin settings for Site Contextsnap.
  *
- * @package ProjectContextConnector
+ * @package SiteContextsnap
  */
 
 namespace PCC\Admin;
@@ -57,10 +57,10 @@ class Admin {
 	 */
 	public function menu() {
 		add_options_page(
-			__( 'Project Context Connector', 'project-context-connector' ),
-			__( 'Project Context Connector', 'project-context-connector' ),
+			__( 'Site Contextsnap', 'site-contextsnap' ),
+			__( 'Site Contextsnap', 'site-contextsnap' ),
 			'manage_options',
-			'project-context-connector',
+			'site-contextsnap',
 			array( $this, 'render' )
 		);
 	}
@@ -95,30 +95,30 @@ class Admin {
 
 		add_settings_section(
 			'pcc_general',
-			__( 'General', 'project-context-connector' ),
+			__( 'General', 'site-contextsnap' ),
 			'__return_false',
 			'pcc_settings'
 		);
-		add_settings_field( 'cors_enabled', __( 'Enable CORS', 'project-context-connector' ), array( $this, 'field_checkbox' ), 'pcc_settings', 'pcc_general', array( 'key' => 'cors_enabled' ) );
-		add_settings_field( 'allowed_origins', __( 'Allowed Origins (CORS)', 'project-context-connector' ), array( $this, 'field_textarea' ), 'pcc_settings', 'pcc_general', array( 'key' => 'allowed_origins', 'placeholder' => "https://example.com\nhttps://ci.local" ) );
-		add_settings_field( 'rate_limit_threshold', __( 'Rate limit: requests per window', 'project-context-connector' ), array( $this, 'field_number' ), 'pcc_settings', 'pcc_general', array( 'key' => 'rate_limit_threshold', 'min' => 1 ) );
-		add_settings_field( 'rate_limit_window', __( 'Rate limit window (seconds)', 'project-context-connector' ), array( $this, 'field_number' ), 'pcc_settings', 'pcc_general', array( 'key' => 'rate_limit_window', 'min' => 1 ) );
-		add_settings_field( 'cache_ttl', __( 'Cache max age (seconds)', 'project-context-connector' ), array( $this, 'field_number' ), 'pcc_settings', 'pcc_general', array( 'key' => 'cache_ttl', 'min' => 0 ) );
-		add_settings_field( 'expose_updates', __( 'Expose update metadata', 'project-context-connector' ), array( $this, 'field_checkbox' ), 'pcc_settings', 'pcc_general', array( 'key' => 'expose_updates' ) );
-		add_settings_field( 'expose_database_version', __( 'Expose database version', 'project-context-connector' ), array( $this, 'field_checkbox_with_description' ), 'pcc_settings', 'pcc_general', array( 'key' => 'expose_database_version', 'description' => __( 'Include database driver and version. Disable for minimal information disclosure.', 'project-context-connector' ) ) );
+		add_settings_field( 'cors_enabled', __( 'Enable CORS', 'site-contextsnap' ), array( $this, 'field_checkbox' ), 'pcc_settings', 'pcc_general', array( 'key' => 'cors_enabled' ) );
+		add_settings_field( 'allowed_origins', __( 'Allowed Origins (CORS)', 'site-contextsnap' ), array( $this, 'field_textarea' ), 'pcc_settings', 'pcc_general', array( 'key' => 'allowed_origins', 'placeholder' => "https://example.com\nhttps://ci.local" ) );
+		add_settings_field( 'rate_limit_threshold', __( 'Rate limit: requests per window', 'site-contextsnap' ), array( $this, 'field_number' ), 'pcc_settings', 'pcc_general', array( 'key' => 'rate_limit_threshold', 'min' => 1 ) );
+		add_settings_field( 'rate_limit_window', __( 'Rate limit window (seconds)', 'site-contextsnap' ), array( $this, 'field_number' ), 'pcc_settings', 'pcc_general', array( 'key' => 'rate_limit_window', 'min' => 1 ) );
+		add_settings_field( 'cache_ttl', __( 'Cache max age (seconds)', 'site-contextsnap' ), array( $this, 'field_number' ), 'pcc_settings', 'pcc_general', array( 'key' => 'cache_ttl', 'min' => 0 ) );
+		add_settings_field( 'expose_updates', __( 'Expose update metadata', 'site-contextsnap' ), array( $this, 'field_checkbox' ), 'pcc_settings', 'pcc_general', array( 'key' => 'expose_updates' ) );
+		add_settings_field( 'expose_database_version', __( 'Expose database version', 'site-contextsnap' ), array( $this, 'field_checkbox_with_description' ), 'pcc_settings', 'pcc_general', array( 'key' => 'expose_database_version', 'description' => __( 'Include database driver and version. Disable for minimal information disclosure.', 'site-contextsnap' ) ) );
 
 		add_settings_section(
 			'pcc_access',
-			__( 'Access Control', 'project-context-connector' ),
+			__( 'Access Control', 'site-contextsnap' ),
 			function () {
-				echo '<p>' . esc_html__( 'In addition to the capability pcc_read_snapshot (mapped to manage_options by default), optionally allow specific capabilities, user IDs, and IP addresses.', 'project-context-connector' ) . '</p>';
+				echo '<p>' . esc_html__( 'In addition to the capability pcc_read_snapshot (mapped to manage_options by default), optionally allow specific capabilities, user IDs, and IP addresses.', 'site-contextsnap' ) . '</p>';
 			},
 			'pcc_settings'
 		);
-		add_settings_field( 'allow_caps', __( 'Allow capabilities (one per line)', 'project-context-connector' ), array( $this, 'field_textarea' ), 'pcc_settings', 'pcc_access', array( 'key' => 'allow_caps', 'placeholder' => "manage_options\nview_site_health" ) );
-		add_settings_field( 'allow_user_ids', __( 'Allow user IDs (comma or newline separated)', 'project-context-connector' ), array( $this, 'field_textarea' ), 'pcc_settings', 'pcc_access', array( 'key' => 'allow_user_ids', 'placeholder' => "1\n42" ) );
-		add_settings_field( 'allow_ips', __( 'Allow IPs (exact matches, one per line)', 'project-context-connector' ), array( $this, 'field_textarea' ), 'pcc_settings', 'pcc_access', array( 'key' => 'allow_ips', 'placeholder' => "127.0.0.1\n203.0.113.12" ) );
-		add_settings_field( 'allow_bearer', __( 'Allow Bearer auth (if a JWT/OAuth plugin sets the current user)', 'project-context-connector' ), array( $this, 'field_checkbox' ), 'pcc_settings', 'pcc_access', array( 'key' => 'allow_bearer' ) );
+		add_settings_field( 'allow_caps', __( 'Allow capabilities (one per line)', 'site-contextsnap' ), array( $this, 'field_textarea' ), 'pcc_settings', 'pcc_access', array( 'key' => 'allow_caps', 'placeholder' => "manage_options\nview_site_health" ) );
+		add_settings_field( 'allow_user_ids', __( 'Allow user IDs (comma or newline separated)', 'site-contextsnap' ), array( $this, 'field_textarea' ), 'pcc_settings', 'pcc_access', array( 'key' => 'allow_user_ids', 'placeholder' => "1\n42" ) );
+		add_settings_field( 'allow_ips', __( 'Allow IPs (exact matches, one per line)', 'site-contextsnap' ), array( $this, 'field_textarea' ), 'pcc_settings', 'pcc_access', array( 'key' => 'allow_ips', 'placeholder' => "127.0.0.1\n203.0.113.12" ) );
+		add_settings_field( 'allow_bearer', __( 'Allow Bearer auth (if a JWT/OAuth plugin sets the current user)', 'site-contextsnap' ), array( $this, 'field_checkbox' ), 'pcc_settings', 'pcc_access', array( 'key' => 'allow_bearer' ) );
 	}
 
 	/**
@@ -203,7 +203,7 @@ class Admin {
 	 */
 	public function render() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'project-context-connector' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'site-contextsnap' ) );
 		}
 		$options = get_option( self::OPTION, array() );
 		require __DIR__ . '/views/settings-page.php';
@@ -216,7 +216,7 @@ class Admin {
 	 */
 	public function handle_generate_key() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Permission denied.', 'project-context-connector' ) );
+			wp_die( esc_html__( 'Permission denied.', 'site-contextsnap' ) );
 		}
 		check_admin_referer( 'pcc_generate_key' );
 
@@ -227,7 +227,7 @@ class Admin {
 		// Redirect back with one-time values in query string (not stored).
 		$redirect = add_query_arg(
 			array(
-				'page'      => 'project-context-connector',
+				'page'      => 'site-contextsnap',
 				'pcc_key'   => rawurlencode( $key_id ),
 				'pcc_secret'=> rawurlencode( $secret ),
 			),
