@@ -2,11 +2,11 @@
 /**
  * Plugin Name:       Site Contextsnap
  * Description:       Expose a sanitized, read-only project snapshot via REST and WP-CLI for Slack/Teams prompts, scripts, and CI.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 6.1
  * Requires PHP:      8.0
  * Tested up to:      6.9
- * Stable tag:        1.1.0
+ * Stable tag:        1.2.0
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       site-contextsnap
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PCC_VERSION', '1.1.0' );
+define( 'PCC_VERSION', '1.2.0' );
 define( 'PCC_PLUGIN_FILE', __FILE__ );
 define( 'PCC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PCC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

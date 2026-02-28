@@ -4,7 +4,7 @@ Tags: rest api, cli, devops, telemetry-free, slack
 Requires at least: 6.1
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,7 +88,7 @@ No. It only returns technical metadata. No secrets are read from the DB; HMAC se
 
 Yes. It reports network‑active plugins and the `MULTISITE` flag.
 
-= What changed with CORS wildcards in 1.1.0? =
+= What changed with CORS wildcards in 1.2.0? =
 
 CORS wildcard patterns like `https://*.example.com` now match **ONLY subdomains**, not the base domain. If you need both `example.com` and `sub.example.com`, add both patterns explicitly:
 
@@ -109,7 +109,7 @@ Yes. In **Settings → Site Contextsnap**, uncheck "Expose database version" to 
 
 == Changelog ==
 
-= 1.1.0 =
+= 1.2.0 =
 * Security: Added centralized Signature_Validator service with enhanced timestamp validation
 * Security: Improved CORS wildcard validation with scheme enforcement
 * Security: Enhanced timestamp validation (rejects leading zeros and out-of-range values)
@@ -125,7 +125,7 @@ Yes. In **Settings → Site Contextsnap**, uncheck "Expose database version" to 
 
 == Upgrade Notice ==
 
-= 1.1.0 =
+= 1.2.0 =
 Security improvements and parity with Drupal module. BREAKING: CORS wildcard behavior changed - `*.example.com` now matches ONLY subdomains. Add both `https://example.com` and `https://*.example.com` if you need both.
 
 = 1.0.0 =
