@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ruleset name="PCC WPCS">
-  <description>WordPress Coding Standards for Site Contextsnap.</description>
-  <file>site-contextsnap.php</file>
+  <description>WordPress Coding Standards for Contextsnap Site Connector.</description>
+  <file>contextsnap-site-connector.php</file>
   <file>includes</file>
   <rule ref="WordPress-Extra"/>
   <rule ref="WordPress-Docs"/>

@@ -2,7 +2,7 @@
 /**
  * Uninstall hook to remove plugin options.
  *
- * @package SiteContextsnap
+ * @package ContextsnapSiteConnector
  */
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {

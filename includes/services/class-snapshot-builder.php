@@ -2,7 +2,7 @@
 /**
  * Build the high-signal, stable snapshot.
  *
- * @package SiteContextsnap
+ * @package ContextsnapSiteConnector
  */
 
 namespace PCC\Services;

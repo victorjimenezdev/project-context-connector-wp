@@ -2,7 +2,7 @@
 /**
  * Wrap core update transients for optional inclusion.
  *
- * @package SiteContextsnap
+ * @package ContextsnapSiteConnector
  */
 
 namespace PCC\Services;

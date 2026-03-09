@@ -2,7 +2,7 @@
 /**
  * Main plugin orchestrator.
  *
- * @package SiteContextsnap
+ * @package ContextsnapSiteConnector
  */
 
 namespace PCC;

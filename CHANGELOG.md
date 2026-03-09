@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0] - 2026-02-28
 
 ### Changed
-- Renamed plugin to Site Contextsnap (slug: `site-contextsnap`) for WordPress.org directory compliance
+- Renamed plugin to Contextsnap Site Connector (slug: `contextsnap-site-connector`) for WordPress.org directory compliance
 
 ## [1.1.0] - 2026-02-16
 
